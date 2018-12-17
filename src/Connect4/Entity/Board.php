@@ -4,10 +4,9 @@ declare(strict_types=1);
 namespace App\Connect4\Entity;
 
 
-use RuntimeException;
 use Support\Renderer\Output;
 
-class Board
+final class Board
 {
     private $board;
     private $winner = null;
@@ -20,6 +19,9 @@ class Board
         return $this->winner;
     }
 
+    /**
+     * On construit la grille du puissance 4
+     */
     public function __construct()
     {
         for ($i = 0; $i < 6; $i++) {
@@ -49,6 +51,10 @@ class Board
         return $return;
     }
 
+    /**
+     * Retourne un tableau avec les index des colonnes qui ne sont pas encore pleine
+     * @return array
+     */
     public function possibleColumn(): array
     {
         $return = [];
@@ -62,6 +68,12 @@ class Board
         return $return;
     }
 
+    /**
+     * Permet de mettre une piece dans la colonne voulu
+     * @param int $column
+     * @param Output $output
+     * @param Team $team
+     */
     public function play(int $column, Output &$output, Team $team): void
     {
         $line = 0;
@@ -73,12 +85,16 @@ class Board
             }
         }
 
-
         $output->writeLine("Joueur " . $team->getParticipants()[$team->player] ." (" . $team->getColor() . ") joue dans la case {$line}.{$column}");
 
         $this->checkWinner($column, $line, $team);
     }
 
+    /**
+     * Vérifie si 4 piece sont aligné dans la même colonne
+     * @param int $column
+     * @return bool
+     */
     private function columnIsWin(int $column): bool
     {
         $currentColor = '';
@@ -98,6 +114,11 @@ class Board
         return ($currentScore >= 4);
     }
 
+    /**
+     * Verifie si 4 pieces sont aligné dans une même ligne
+     * @param int $line
+     * @return bool
+     */
     private function rowIsWin(int $line): bool
     {
         $currentColor = "";
@@ -116,6 +137,13 @@ class Board
         return ($currentScore >= 4);
     }
 
+    /**
+     * Appel les fonctions columnIsWin() et rowIsWin() pour passer la couelur de l'équipe gagnante dans
+     * la variable local $winner
+     * @param int $column
+     * @param int $line
+     * @param Team $team
+     */
     public function checkWinner(int $column, int $line, Team $team): void
     {
         if ($this->columnIsWin($column) || $this->rowIsWin($line)) {

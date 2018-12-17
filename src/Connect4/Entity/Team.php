@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Connect4\Entity;
 
 
-class Team
+final class Team
 {
     private const RED = 'red';
     private const YELLOW = 'yellow';
